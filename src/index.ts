@@ -2,6 +2,20 @@ export function clone(obj: any): any {
   if (!obj) {
     return obj;
   }
+  if (obj instanceof Date) {
+    return new Date(obj.getTime());
+  }
+  if (typeof obj !== 'object') {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    const arr = [];
+    for (const sub of obj) {
+      const c = clone(sub);
+      arr.push(c);
+    }
+    return arr;
+  }
   const x: any = {};
   const keys = Object.keys(obj);
   for (const k of keys) {
@@ -11,16 +25,7 @@ export function clone(obj: any): any {
     } else {
       switch (typeof v) {
         case 'object':
-          if (Array.isArray(v)) {
-            const arr = [];
-            for (const sub of v) {
-              const c = clone(sub);
-              arr.push(c);
-            }
-            x[k] = arr;
-          } else {
-            x[k] = clone(v);
-          }
+          x[k] = clone(v);
           break;
         default:
           x[k] = v;
