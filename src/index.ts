@@ -36,7 +36,7 @@ export function clone(obj: any): any {
   return x;
 }
 
-export function getDirectValue(obj: any, key: string) {
+export function getDirectValue(obj: any, key: string): any {
   if (obj && obj.hasOwnProperty(key)) {
     return obj[key];
   }
@@ -117,6 +117,28 @@ export function diff(obj1: any, obj2: any): string[] {
     fields.push(n);
   }
   return fields;
+}
+
+export function makeDiff(obj1: any, obj2: any, keys?: string[], version?: string): any {
+  const obj3: any = {};
+  const s = diff(obj1, obj2);
+  if (s.length === 0) {
+    return obj3;
+  }
+  for (const d of s) {
+    obj3[d] = obj2[d];
+  }
+  if (keys && keys.length > 0) {
+    for (const x of keys) {
+      if (x.length > 0) {
+        obj3[x] = obj1[x];
+      }
+    }
+  }
+  if (version && version.length > 0) {
+    obj3[version] = obj1[version];
+  }
+  return obj3;
 }
 
 export function notIn(s1: string[], s2: string[]): string[] {
