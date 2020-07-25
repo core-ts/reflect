@@ -216,3 +216,29 @@ export function equalArrays<T>(ar1: T[], ar2: T[]): boolean {
   }
   return true;
 }
+
+export function trim(obj: any): void {
+  if (!obj || typeof obj !== 'object' || obj instanceof Date) {
+    return;
+  }
+  const keys = Object.keys(obj);
+  for (const key of keys) {
+    const v = obj[key];
+    if (!v || v === '') {
+      delete obj[key];
+    } else if (v && typeof v === 'object') {
+      if (!Array.isArray(v)) {
+        trim(v);
+      } else {
+        if (v.length === 0) {
+          delete obj[key];
+        } else {
+          for (const item of v) {
+            trim(item);
+          }
+        }
+      }
+    }
+  }
+  return obj;
+}
