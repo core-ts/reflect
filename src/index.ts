@@ -1,3 +1,29 @@
+export function trim(obj: any): void {
+  if (!obj || typeof obj !== 'object' || obj instanceof Date) {
+    return;
+  }
+  const keys = Object.keys(obj);
+  for (const key of keys) {
+    const v = obj[key];
+    if (v == null || v === '' || v === undefined) {
+      delete obj[key];
+    } else if (typeof v === 'object') {
+      if (!Array.isArray(v)) {
+        trim(v);
+      } else {
+        if (v.length === 0) {
+          delete obj[key];
+        } else {
+          for (const item of v) {
+            trim(item);
+          }
+        }
+      }
+    }
+  }
+  return obj;
+}
+
 export function clone(obj: any): any {
   if (!obj) {
     return obj;
@@ -217,28 +243,42 @@ export function equalArrays<T>(ar1: T[], ar2: T[]): boolean {
   return true;
 }
 
-export function trim(obj: any): void {
-  if (!obj || typeof obj !== 'object' || obj instanceof Date) {
-    return;
-  }
-  const keys = Object.keys(obj);
-  for (const key of keys) {
-    const v = obj[key];
-    if (!v || v === '') {
-      delete obj[key];
-    } else if (v && typeof v === 'object') {
-      if (!Array.isArray(v)) {
-        trim(v);
-      } else {
-        if (v.length === 0) {
-          delete obj[key];
-        } else {
-          for (const item of v) {
-            trim(item);
-          }
-        }
+export function getArray<T>(list: T[], name: string, v: boolean|string|number): T[] {
+  const arrs = [];
+  if (list) {
+    for (const obj of list) {
+      if (obj[name] === v) {
+        arrs.push(obj);
       }
     }
   }
-  return obj;
+  return arrs;
+}
+export function getDiffArray<T>(list: T[], name: string, v: boolean|string|number): T[] {
+  const arrs = [];
+  if (list) {
+    for (const obj of list) {
+      if (obj[name] !== true) {
+        arrs.push(obj);
+      }
+    }
+  }
+  return arrs;
+}
+export function setAll<T>(list: T[], name: string, v: boolean|string|number): void {
+  if (list) {
+    for (const obj of list) {
+      obj[name] = v;
+    }
+  }
+}
+export function equalAll<T>(list: T[], name: string, v: boolean|string|number): boolean {
+  if (list) {
+    for (const obj of list) {
+      if (obj[name] !== v) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
