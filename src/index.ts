@@ -83,29 +83,17 @@ export function valueOf(obj: any, key: string): any {
   }, obj);
 }
 
-export function setValue(obj: any, key: string, value: any): void {
+export function setValue(obj: any, key: string, value: any): any {
   let replaceKey = key.replace(/\[/g, '.[').replace(/\.\./g, '.');
   if (replaceKey.indexOf('.') === 0) {
     replaceKey = replaceKey.slice(1, replaceKey.length);
   }
   const keys = replaceKey.split('.');
-  let firstKey;
-  firstKey = keys.shift();
+  let firstKey = keys.shift()
+  if (!firstKey) {
+    return;
+  }
   const isArrayKey = /\[([0-9]+)\]/.test(firstKey);
-
-  const setKey = (_object, _isArrayKey, _key, _nextValue) => {
-    if (_isArrayKey) {
-      if (_object.length > _key) {
-        _object[_key] = _nextValue;
-      } else {
-        _object.push(_nextValue);
-      }
-    } else {
-      _object[_key] = _nextValue;
-    }
-    return _object;
-  };
-
   if (keys.length > 0) {
     const firstKeyValue = obj[firstKey] || {};
     const returnValue = setValue(firstKeyValue, keys.join('.'), value);
@@ -113,6 +101,18 @@ export function setValue(obj: any, key: string, value: any): void {
   }
   return setKey(obj, isArrayKey, firstKey, value);
 }
+const setKey = (_object: any, _isArrayKey: boolean, _key: string, _nextValue: any) => {
+  if (_isArrayKey) {
+    if (_object.length > _key) {
+      _object[_key] = _nextValue;
+    } else {
+      _object.push(_nextValue);
+    }
+  } else {
+    _object[_key] = _nextValue;
+  }
+  return _object;
+};
 
 export function diff(obj1: any, obj2: any): string[] {
   const fields = [];
@@ -247,7 +247,7 @@ export function getArray<T>(list: T[], name: string, v: boolean|string|number): 
   const arrs = [];
   if (list) {
     for (const obj of list) {
-      if (obj[name] === v) {
+      if ((obj as any)[name] === v) {
         arrs.push(obj);
       }
     }
@@ -258,7 +258,7 @@ export function getDiffArray<T>(list: T[], name: string, v: boolean|string|numbe
   const arrs = [];
   if (list) {
     for (const obj of list) {
-      if (obj[name] !== true) {
+      if ((obj as any)[name] !== true) {
         arrs.push(obj);
       }
     }
@@ -268,14 +268,14 @@ export function getDiffArray<T>(list: T[], name: string, v: boolean|string|numbe
 export function setAll<T>(list: T[], name: string, v: boolean|string|number): void {
   if (list) {
     for (const obj of list) {
-      obj[name] = v;
+      (obj as any)[name] = v;
     }
   }
 }
 export function equalAll<T>(list: T[], name: string, v: boolean|string|number): boolean {
   if (list) {
     for (const obj of list) {
-      if (obj[name] !== v) {
+      if ((obj as any)[name] !== v) {
         return false;
       }
     }

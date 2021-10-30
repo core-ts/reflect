@@ -1,6 +1,6 @@
 {
   "name": "reflectx",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "reflect",
   "main": "./lib/index.js",
   "types": "./src/index.ts",
