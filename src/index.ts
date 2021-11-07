@@ -89,7 +89,7 @@ export function setValue(obj: any, key: string, value: any): any {
     replaceKey = replaceKey.slice(1, replaceKey.length);
   }
   const keys = replaceKey.split('.');
-  let firstKey = keys.shift()
+  const firstKey = keys.shift();
   if (!firstKey) {
     return;
   }
