@@ -243,7 +243,7 @@ export function equalArrays<T>(ar1: T[], ar2: T[]): boolean {
   return true;
 }
 
-export function getArray<T>(list: T[], name: string, v: boolean|string|number): T[] {
+export function getArray<T>(list: T[]|undefined|null, name: string, v: boolean|string|number): T[] {
   const arrs = [];
   if (list) {
     for (const obj of list) {
@@ -254,7 +254,7 @@ export function getArray<T>(list: T[], name: string, v: boolean|string|number): 
   }
   return arrs;
 }
-export function getDiffArray<T>(list: T[], name: string, v: boolean|string|number): T[] {
+export function getDiffArray<T>(list: T[]|undefined|null, name: string, v: boolean|string|number): T[] {
   const arrs = [];
   if (list) {
     for (const obj of list) {
@@ -265,14 +265,14 @@ export function getDiffArray<T>(list: T[], name: string, v: boolean|string|numbe
   }
   return arrs;
 }
-export function setAll<T>(list: T[], name: string, v: boolean|string|number): void {
+export function setAll<T>(list: T[]|undefined|null, name: string, v: boolean|string|number): void {
   if (list) {
     for (const obj of list) {
       (obj as any)[name] = v;
     }
   }
 }
-export function equalAll<T>(list: T[], name: string, v: boolean|string|number): boolean {
+export function equalAll<T>(list: T[]|undefined|null, name: string, v: boolean|string|number): boolean {
   if (list) {
     for (const obj of list) {
       if ((obj as any)[name] !== v) {
